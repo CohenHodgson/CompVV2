@@ -33,9 +33,11 @@ print(f"Using {device} device")
 
 print("Please input the full file name of the image you want to scan (including extension):")
 
-img = cv.imread(str(input())) # put full file name into terminal (including extension)
+img = cv.imread("../redlight3.jpg") # put full file name into terminal (including extension)
 
-assert img is not None, "file could not be read"
+assert img is not None, "file could not be read, None type"
+
+print("Please input the full file name of the image you want to scan (including extension):")
 
 hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV) # scan image and convert BGR to hsv
 
@@ -56,7 +58,7 @@ contours, hierachy = cv.findContours(noise_removed, cv.RETR_LIST, cv.CHAIN_APPRO
 # RETR_LIST = just means, get all contours without hierachy.
 # CHAIN_APPROX_NONE = "stores absolutely all the contour points."
 
-image_contours = cv.drawContours(img, contours, contourldx = -1, color = (255,255,255), thickness = 3)
+image_contours = cv.drawContours(img, contours, contourIdx = -1, color = (255,255,255), thickness = 3)
 # -1 tells which contour to draw, -1 means all contours
 
 
