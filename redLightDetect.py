@@ -16,7 +16,7 @@ import cv2 as cv # OpenCV (Computer Vision)
 import glob # for automated file detect. need to set up when net's done for automatic forwarding of images.
 import math
 
-'''
+''' 
 how to find red light from image.
 
 1. get image
@@ -30,6 +30,8 @@ how to find red light from image.
 
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu" # will be gpu on pc
 print(f"Using {device} device")
+
+print("Please input the full file name of the image you want to scan (including extension):")
 
 img = cv.imread(str(input())) # put full file name into terminal (including extension)
 
@@ -123,12 +125,12 @@ trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuff
 # above has both test and answers
 # below only has test given to AI, so we can test on real world
 
-testset = torch.vision.datasets.PUTIMAGEFOLDERHERE
+testset = torch.vision.datasets.PUTIMAGEFOLDERHERE # set of images for testing 
 
 testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle = False)
 # shuffle off, because testdata isn't used for training.
 
-# classes = ('red_light','y')
+classes = ('red_light','not_red_light')
 
 class neuralNet(nn.Module): # the entire neural net, the brain.
     def __init__(self):
@@ -208,5 +210,24 @@ for epoch in range(10): # loop over the dataset x amount of times. try ~50, redu
         # optimizing is trying to find what weights give x = 0
 
         running_lost += loss.item()
-        if i % 2000 == 1999:
-            
+        if i % 2000 == 1999: # 1999 % 2000 == 1999
+            print(f"{epoch + 1}, {i + 1:5} loss: {running_loss / 2000:.5f}")
+            #  1 + 1:5 tells code to     space the code five times
+            # loss is divided by 2000 because there are that
+            # many running losses accumulated, 5f means 5 spaces and turn into float.
+            running_loss = 0.0
+
+print("Training is done.")
+
+PATH = "./redlight.pt"
+torch.save(net.state_dict(), PATH) # save the net in PATH
+# state_dict() = dict of the state of the pytorch tensor
+
+dataiter = iter(testloader)
+images, labels = next(dataiter)
+
+cv.imshow(torchvision.utils.make_grid(images))
+
+net.load_state_dict(torch.load(PATH, weights_only=True))
+
+outputs = net(images)
