@@ -35,9 +35,8 @@ print("Please input the full file name of the image you want to scan (including 
 
 img = cv.imread("../redlight3.jpg") # put full file name into terminal (including extension)
 
-assert img is not None, "file could not be read, None type"
+assert img is not None, "Please input the full file name of the image you want to scan (including extension):"
 
-print("Please input the full file name of the image you want to scan (including extension):")
 
 hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV) # scan image and convert BGR to hsv
 
